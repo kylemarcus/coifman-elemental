@@ -424,23 +424,29 @@ main( int argc, char* argv[] )
                 
                 DEBUG("Finding matching cols");
                 PRINT("* * * * * * * * * * *");
-                
+
+                // NOTE: for this to work correctly the matrix should be
+                //       distributed by cols.
+                //       http://libelemental.org/documentation/dev/core/dist_matrix/DM.html
                 
                 std::stringstream ss;
             
-                for (i=0; i<k; i++) {
+                int i;
+                for (i=0; i<k; i++) {  // pick a col i in S to look for in W
                     
                     // MATLAB: b=S(:,i);  % get a col from S to look for in W
                     // MATLAB: index=find(ismember(round(W'),round(b'),'rows'),1);
                     // MATLAB: ind(i)=index;
                     // W[k][n]
                     
-                    for(c=0; c<n; c++) {
+                    for(c=0; c<n; c++) {  // go through all cols n in W
                         
                         int counter=0;
                         
+                        int r;
                         for(r=0; r<k; r++) {
-                            if ( std::round( W[r+(c*k)] ) == std::round( S[r+(i*k)] ) ) {
+                            //if ( std::round( W[r+(c*k)] ) == std::round( S[r+(i*k)] ) ) {
+                            if ( std::round( W.Get(r, c) ) == std::round( S.Get(r,i) ) ) {
                                 counter++;
                             }
                         }
